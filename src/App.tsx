@@ -269,8 +269,11 @@ export default function App() {
             <kbd>⌘K</kbd>
           </button>
           <button className="c-ai-entry-btn" onClick={() => setAiOpen(true)}>
-            <Icon name="sparkle" size={15} />
-            AI 도우미에게 물어보기
+            <Icon name="sparkle" size={18} />
+            <span className="c-ai-entry-text">
+              <b>AI CHAT</b>
+              <small>규정에 대해 무엇이든 물어보세요</small>
+            </span>
           </button>
         </div>
       </section>
@@ -641,7 +644,7 @@ export default function App() {
 
       <button className="c-ai-fab" onClick={() => setAiOpen(true)} aria-haspopup="dialog" aria-expanded={aiOpen}>
         <Icon name="sparkle" size={18} />
-        <span>AI 도우미</span>
+        <span>AI CHAT</span>
       </button>
 
       {mobileTocOpen && (
@@ -679,10 +682,10 @@ export default function App() {
   const aiSheet = () =>
     aiOpen && (
       <div className="c-ai-scrim" onClick={() => setAiOpen(false)}>
-        <div className="c-ai-sheet" role="dialog" aria-modal="true" aria-label="AI 도우미" onClick={(e) => e.stopPropagation()}>
+        <div className="c-ai-sheet" role="dialog" aria-modal="true" aria-label="AI CHAT" onClick={(e) => e.stopPropagation()}>
           <div className="c-ai-sheet-head">
             <span>
-              <Icon name="sparkle" size={15} /> AI 도우미
+              <Icon name="sparkle" size={15} /> AI CHAT
             </span>
             <button className="c-icon-btn" aria-label="닫기" onClick={() => setAiOpen(false)}>
               <Icon name="close" size={16} />
@@ -691,7 +694,7 @@ export default function App() {
           <div className="c-ai-sheet-body">
             {aiMessages.length === 0 ? (
               <div className="c-ai-empty">
-                <p>필요할 때만 열리는 보조 도우미입니다. 원문을 드래그해 선택하거나, 아래에서 바로 질문해 보세요.</p>
+                <p>규정에 대해 자유롭게 질문해 보세요. 원문을 드래그해 선택하거나, 아래에서 바로 질문해 보세요.</p>
                 <div className="c-ai-chips">
                   <button onClick={() => setAiDraft(active ? `이 조항 설명하기: ${active.id} ${active.title}` : "이 조항 설명하기")}>이 조항 설명하기</button>
                   <button onClick={() => setAiDraft(active ? `관련 규정 찾기: ${active.id} ${active.title}` : "관련 규정 찾기")}>관련 규정 찾기</button>
