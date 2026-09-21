@@ -1,35 +1,15 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import type { CSSProperties } from "react"
 import "./library.css"
+import { chapters, sections, chapter1Body, previewOf, chapterHasBody } from "./kecData"
+import type { BodyNode } from "./kecData"
 
 const COVER_ID = "__cover__"
 
-// 현재 확보된 자료 기준: 하위 목차 데이터는 1장(공통사항)에만 연결되어 있음.
-// 다른 대분류는 세부 조항 데이터가 없으므로 "준비 중" 상태를 정직하게 표시한다.
-const chapters = [
-  { id: "1", title: "공통사항", desc: "전기설비 전반에 적용되는 공통 기준과 총칙" },
-  { id: "2", title: "저압 전기설비", desc: "저압 배전·배선 설비의 시공 기준" },
-  { id: "3", title: "고압·특고압 전기설비", desc: "고압 및 특고압 설비의 설계·시공 기준" },
-  { id: "4", title: "전기철도설비", desc: "전기철도 급전 및 관련 설비 기준" },
-  { id: "5", title: "분산형전원설비", desc: "태양광·풍력 등 분산형 전원 연계 기준" },
-  { id: "6", title: "발전용 화력설비", desc: "화력발전 설비의 설계·시공 기준" },
-  { id: "7", title: "발전용 수력설비", desc: "수력발전 설비의 설계·시공 기준" },
-  { id: "8", title: "보칙", desc: "그 밖에 필요한 사항" },
-]
-const sections = [
-  { id: "100", title: "총칙", desc: "규정의 목적과 적용 범위" },
-  { id: "110", title: "일반사항", desc: "공통적으로 적용되는 일반 기준" },
-  { id: "120", title: "전선", desc: "전선의 종류와 시설 기준" },
-  { id: "130", title: "전로의 절연", desc: "전로 절연에 관한 기준" },
-  { id: "140", title: "접지시스템", desc: "접지시스템의 구분과 시설 방법" },
-  { id: "150", title: "피뢰시스템", desc: "피뢰설비 시설에 관한 기준" },
-  { id: "160", title: "발전설비 용접", desc: "발전설비 용접부에 관한 기준" },
-  { id: "170", title: "발전설비 비파괴검사", desc: "발전설비 비파괴검사에 관한 기준" },
-]
 type Entry = { id: string; title: string; desc: string; parentId: string; parentTitle: string; isChapter: boolean }
 const entries: Entry[] = [
-  ...chapters.map((c) => ({ id: c.id, title: c.title, desc: c.desc, parentId: "", parentTitle: "", isChapter: true })),
-  ...sections.map((s) => ({ id: s.id, title: s.title, desc: s.desc, parentId: "1", parentTitle: "공통사항", isChapter: false })),
+  ...chapters.map((c) => ({ id: c.id, title: c.title, desc: previewOf(c.id), parentId: "", parentTitle: "", isChapter: true })),
+  ...sections.map((s) => ({ id: s.id, title: s.title, desc: previewOf(s.id), parentId: s.parentId, parentTitle: s.parentTitle, isChapter: false })),
 ]
 const entryOf = (id: string) => entries.find((e) => e.id === id)
 const siblingsOf = (id: string) => {
@@ -38,6 +18,7 @@ const siblingsOf = (id: string) => {
   const parentId = e.isChapter ? e.id : e.parentId
   return entries.filter((x) => !x.isChapter && x.parentId === parentId && x.id !== id)
 }
+const sectionsOf = (chapterId: string) => sections.filter((s) => s.parentId === chapterId)
 
 // 실사용 통계가 아닌, 큐레이션한 탐색 예시 (정직성 유지를 위해 화면에도 "예시"로 명시)
 const curatedFrequent = ["140", "100", "130"]
@@ -48,7 +29,41 @@ type FontStep = 0 | 1 | 2
 const FONT_PX = [14, 15.5, 17.5]
 const FONT_LABEL = ["작게", "보통", "크게"]
 
-type AiTurn = { q: string; refId?: string }
+type Excerpt = { sectionId: string; code: string; title: string; body: string }
+type AiTurn = { q: string; refId?: string; excerpt?: Excerpt }
+
+// 실제 AI가 생성한 답변이 아니라, 1장(공통사항)에 연결해 둔 실제 규정 원문 중 질문과
+// 가장 관련 있는 문단을 문자 bigram 유사도로 찾아 인용하는 정직한 검색 함수.
+function bigrams(s: string): Set<string> {
+  const clean = s.replace(/\s+/g, "")
+  const set = new Set<string>()
+  for (let i = 0; i < clean.length - 1; i++) set.add(clean.slice(i, i + 2))
+  return set
+}
+function overlapScore(query: Set<string>, target: string): number {
+  const t = bigrams(target)
+  let hits = 0
+  query.forEach((bg) => {
+    if (t.has(bg)) hits++
+  })
+  return hits
+}
+function findRealExcerpt(question: string): Excerpt | null {
+  const q = bigrams(question)
+  let best: Excerpt | null = null
+  let bestScore = 0
+  for (const sectionId of Object.keys(chapter1Body)) {
+    for (const node of chapter1Body[sectionId]) {
+      if (!node.body) continue
+      const score = overlapScore(q, `${node.title ?? ""} ${node.body}`)
+      if (score > bestScore) {
+        bestScore = score
+        best = { sectionId, code: node.code, title: node.title ?? sections.find((s) => s.id === sectionId)?.title ?? node.code, body: node.body }
+      }
+    }
+  }
+  return bestScore >= 2 ? best : null
+}
 
 function Icon({ name, size = 20 }: { name: string; size?: number }) {
   const paths: Record<string, string> = {
@@ -105,7 +120,7 @@ export default function App() {
   const [version, setVersion] = useState("2026-01-05")
   const [screen, setScreen] = useState<Screen>("library")
   const [selected, setSelected] = useState("")
-  const [chapterOpen, setChapterOpen] = useState(true)
+  const [openChapters, setOpenChapters] = useState<Set<string>>(() => new Set(["1"]))
   const [mobileTocOpen, setMobileTocOpen] = useState(false)
   const [toolsOpen, setToolsOpen] = useState(false)
   const [bookmarks, setBookmarks] = useState<string[]>([])
@@ -243,7 +258,8 @@ export default function App() {
   const sendAi = () => {
     const text = aiDraft.trim()
     if (!text) return
-    setAiMessages((m) => [...m, { q: text, refId: !isCover && selected ? selected : undefined }])
+    const excerpt = findRealExcerpt(text) ?? undefined
+    setAiMessages((m) => [...m, { q: text, refId: !isCover && selected ? selected : undefined, excerpt }])
     setAiDraft("")
   }
 
@@ -285,15 +301,16 @@ export default function App() {
           </div>
           <div className="c-dir-list" role="list" aria-label="규정 대분류">
             {chapters.map((c) => {
-              const subCount = sections.length && c.id === "1" ? sections.length : 0
+              const subCount = sectionsOf(c.id).length
+              const hasBody = chapterHasBody(c.id)
               return (
                 <button className="c-dir-row" key={c.id} role="listitem" onClick={() => goReader(c.id)}>
                   <span className="c-mini-badge">{c.id}</span>
                   <span className="c-dir-main">
                     <b>{c.title}</b>
-                    <small>{c.desc}</small>
+                    <small>{previewOf(c.id)}</small>
                   </span>
-                  <span className={`c-dir-meta ${subCount ? "" : "muted"}`}>{subCount > 0 ? `${subCount}개 조항 연결` : "표지만 연결됨"}</span>
+                  <span className={`c-dir-meta ${hasBody ? "" : "muted"}`}>{hasBody ? `${subCount}개 조항 · 본문 연결됨` : `${subCount}개 조항 · 목차만 연결`}</span>
                   <Icon name="chevron" size={16} />
                 </button>
               )
@@ -398,37 +415,46 @@ export default function App() {
 
   // ---------- Reader (immersive document view) ----------
 
+  const toggleChapter = (id: string) => {
+    setOpenChapters((prev) => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+  }
+
   const tocList = (onNavigate: (id: string) => void) => (
     <div className="c-toc-list">
-      {chapters.map((c) => (
-        <div key={c.id}>
-          <div className={`c-toc-row ${selected === c.id ? "active" : ""}`}>
-            {c.id === "1" ? (
-              <button className="c-toc-expand" aria-label={chapterOpen ? "접기" : "펼치기"} aria-expanded={chapterOpen} onClick={() => setChapterOpen((v) => !v)}>
-                <span className={chapterOpen ? "rot" : ""}>
+      {chapters.map((c) => {
+        const isOpen = openChapters.has(c.id)
+        const kids = sectionsOf(c.id)
+        return (
+          <div key={c.id}>
+            <div className={`c-toc-row ${selected === c.id ? "active" : ""}`}>
+              <button className="c-toc-expand" aria-label={isOpen ? "접기" : "펼치기"} aria-expanded={isOpen} onClick={() => toggleChapter(c.id)}>
+                <span className={isOpen ? "rot" : ""}>
                   <Icon name="chevron" size={12} />
                 </span>
               </button>
-            ) : (
-              <span className="c-toc-dot" />
-            )}
-            <button className="c-toc-main" onClick={() => onNavigate(c.id)}>
-              <span className="c-mini-badge">{c.id}</span>
-              {c.title}
-            </button>
-          </div>
-          {c.id === "1" && chapterOpen && (
-            <div className="c-toc-sub">
-              {sections.map((s) => (
-                <button key={s.id} className={selected === s.id ? "active" : ""} onClick={() => onNavigate(s.id)}>
-                  <span>{s.id}</span>
-                  {s.title}
-                </button>
-              ))}
+              <button className="c-toc-main" onClick={() => onNavigate(c.id)}>
+                <span className="c-mini-badge">{c.id}</span>
+                {c.title}
+              </button>
             </div>
-          )}
-        </div>
-      ))}
+            {isOpen && (
+              <div className="c-toc-sub">
+                {kids.map((s) => (
+                  <button key={s.id} className={selected === s.id ? "active" : ""} onClick={() => onNavigate(s.id)}>
+                    <span>{s.id}</span>
+                    {s.title}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )
+      })}
       <button className="c-toc-cover" onClick={() => onNavigate(COVER_ID)}>
         <Icon name="book" size={13} /> 전체 규정 원문 표지 보기
       </button>
@@ -546,7 +572,7 @@ export default function App() {
           <p>{active.desc}</p>
           {siblingsOf(active.id).length ? (
             <>
-              <p className="c-chapter-hint">왼쪽 목차에서 하위 조항을 선택하면 원문을 확인할 수 있습니다.</p>
+              <p className="c-chapter-hint">실제 목차 기준 하위 절입니다. 왼쪽 목차 또는 아래에서 선택하면 원문을 확인할 수 있습니다.</p>
               <div className="c-chapter-children">
                 {siblingsOf(active.id).map((e) => (
                   <button key={e.id} onClick={() => goReader(e.id)}>
@@ -561,13 +587,35 @@ export default function App() {
             <p className="c-chapter-hint">이 대분류의 세부 조항 데이터는 아직 준비 중입니다.</p>
           )}
         </div>
+      ) : chapter1Body[selected] ? (
+        <article className="c-real-doc">
+          <header className="c-real-doc-head">
+            <span className="c-mini-badge lg">{selected}</span>
+            <div>
+              <span className="c-real-doc-source">실제 규정 원문 · {version}</span>
+              <h2>{active?.title}</h2>
+            </div>
+          </header>
+          {chapter1Body[selected].map((n: BodyNode, i: number) => (
+            <div className={`c-real-node depth-${n.depth}`} key={i}>
+              {n.title && <h4>{n.depth <= 3 ? `${n.code} ${n.title}` : n.title}</h4>}
+              {n.body && <p>{n.body}</p>}
+            </div>
+          ))}
+          <p className="c-real-doc-foot">
+            출처: 기후에너지환경부 고시 「한국전기설비규정」({version}) ·{" "}
+            <a href={`https://kecnav.dosystem.kr/reader/${sections.find((s) => s.id === selected)?.pageFrom ?? 1}`} target="_blank" rel="noreferrer">
+              기존 사이트에서 원본 지면 보기 ↗
+            </a>
+          </p>
+        </article>
       ) : (
         <div className="c-unavailable">
           <Icon name="book" size={30} />
-          <h3>이 조항의 원문은 아직 연결되지 않았습니다</h3>
+          <h3>이 조항의 본문은 아직 이 시안에 연결되지 않았습니다</h3>
           <p>
-            <span className="c-mini-badge">{selected}</span> {active?.title} 조항의 실제 원문 데이터는 아직 연결되어 있지 않습니다. 아래 문장을 드래그해 선택하면 AI 메뉴가 나타나는 인터랙션을
-            미리 확인할 수 있습니다.
+            <span className="c-mini-badge">{selected}</span> {active?.title}의 목차 정보(실제 원문 {sections.find((s) => s.id === selected)?.pageFrom}쪽부터)는 실제 규정 기준이지만, 본문
+            텍스트는 아직 이 시안에 연결되어 있지 않습니다. 아래 문장을 드래그해 선택하면 AI 메뉴가 나타나는 인터랙션을 미리 확인할 수 있습니다.
           </p>
           <p className="c-selectable-demo">이 문단은 선택 인터랙션을 시연하기 위한 안내 문장입니다. 실제 조항 원문이 아닙니다.</p>
           <a href="https://kecnav.dosystem.kr/" target="_blank" rel="noreferrer">
@@ -712,10 +760,27 @@ export default function App() {
                       </div>
                     )}
                     <div className="c-ai-q">{m.q}</div>
-                    <div className="c-ai-a">
-                      <Icon name="sparkle" size={14} />
-                      <p>질문이 입력되었습니다. 이 화면은 디자인 시안으로, 실제 AI 답변은 아직 연결되지 않았습니다.</p>
-                    </div>
+                    {m.excerpt ? (
+                      <div className="c-ai-a">
+                        <Icon name="sparkle" size={14} />
+                        <div>
+                          <p>관련된 실제 규정 원문을 찾았습니다. (AI가 생성한 답변이 아니라 원문 발췌입니다)</p>
+                          <button className="c-ai-excerpt" onClick={() => goReader(m.excerpt!.sectionId)}>
+                            <div className="c-ai-excerpt-head">
+                              <span className="c-mini-badge">{m.excerpt.code}</span>
+                              {m.excerpt.title}
+                              <Icon name="chevron" size={13} />
+                            </div>
+                            <p>{m.excerpt.body}</p>
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="c-ai-a">
+                        <Icon name="sparkle" size={14} />
+                        <p>관련된 실제 규정 원문을 찾지 못했습니다. 이 시안은 1장(공통사항)의 실제 원문만 검색 대상으로 연결되어 있습니다.</p>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
@@ -738,7 +803,7 @@ export default function App() {
               <Icon name="arrow" size={17} />
             </button>
           </form>
-          <p className="c-ai-disclaimer">디자인 시안 · 실제 AI 연결 전</p>
+          <p className="c-ai-disclaimer">디자인 시안 · 생성형 AI가 아닌 실제 원문 검색·인용</p>
         </div>
       </div>
     )

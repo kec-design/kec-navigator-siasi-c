@@ -323,6 +323,24 @@
 .c-chapter-children button:hover { border-color: var(--line-strong); background: var(--glass-strong); }
 .c-chapter-children button svg:last-child { margin-left: auto; color: var(--faint); }
 
+/* Real regulation text (currently 공통사항/chapter 1 only) — pulled from the
+   real kecnav.dosystem.kr public TOC/article API, not fabricated. */
+.c-real-doc { max-width: 640px; margin: 0 auto; }
+.c-real-doc-head { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid var(--line); }
+.c-real-doc-source { display: block; font-size: 10.5px; letter-spacing: 1px; color: var(--accent-ink); font-weight: 700; text-transform: uppercase; margin-bottom: 6px; }
+.c-real-doc-head h2 { font-family: "Pretendard Variable:ExtraBold", sans-serif; font-size: 22px; font-weight: 800; margin: 0; letter-spacing: -0.3px; }
+.c-real-node { margin-bottom: 18px; }
+.c-real-node h4 { font-size: 15px; font-weight: 700; margin: 0 0 8px; color: var(--ink); }
+.c-real-node p { margin: 0; white-space: pre-wrap; }
+.c-real-node.depth-3 { margin-top: 30px; }
+.c-real-node.depth-3 h4 { font-size: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+.c-real-node.depth-4 { margin-left: 18px; }
+.c-real-node.depth-4 h4 { font-size: 13.5px; color: var(--accent-ink); }
+.c-real-node.depth-5, .c-real-node.depth-6 { margin-left: 36px; }
+.c-real-node.depth-5 p, .c-real-node.depth-6 p { font-size: 0.96em; color: var(--muted); }
+.c-real-doc-foot { margin-top: 40px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 11px; color: var(--faint); line-height: 1.8; }
+.c-real-doc-foot a { color: var(--accent-ink); }
+
 /* ============================================================
    On-demand annotation panel (bookmarks / notes / related) — a
    glass drawer, never a permanent column, on any viewport size.
@@ -387,6 +405,16 @@
 .c-ai-q { background: var(--glass-strong); border: 1px solid var(--line); color: var(--ink); padding: 11px 14px; border-radius: 14px 14px 3px 14px; font-size: 13px; width: fit-content; max-width: 90%; margin-left: auto; }
 .c-ai-a { display: flex; gap: 9px; margin-top: 12px; font-size: 12.5px; line-height: 1.85; color: var(--muted); }
 .c-ai-a svg { flex-shrink: 0; margin-top: 2px; color: var(--accent-ink); }
+.c-ai-a > p { margin: 0; }
+.c-ai-excerpt {
+  display: block; width: 100%; text-align: left; margin-top: 10px; padding: 12px 14px; border-radius: 12px;
+  border: 1px solid transparent; background: linear-gradient(var(--bg-2), var(--bg-2)) padding-box, var(--accent-grad) border-box;
+  transition: filter 0.15s;
+}
+.c-ai-excerpt:hover, .c-ai-excerpt:focus-visible { filter: brightness(1.15); }
+.c-ai-excerpt-head { display: flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+.c-ai-excerpt-head svg { margin-left: auto; color: var(--faint); }
+.c-ai-excerpt p { margin: 0; font-size: 12px; line-height: 1.8; color: var(--muted); white-space: pre-wrap; }
 .c-ai-composer { display: flex; gap: 8px; padding: 13px 15px; border-top: 1px solid var(--line); }
 .c-ai-composer input { flex: 1; min-width: 0; background: var(--glass); border: 1px solid var(--line); border-radius: 12px; padding: 11px 13px; font-size: 13px; color: var(--ink); }
 .c-ai-composer input:focus { border-color: var(--line-strong); outline: none; }

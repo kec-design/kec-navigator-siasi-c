@@ -1,0 +1,339 @@
+[
+ {
+  "code": "1",
+  "title": "공통사항",
+  "page_from": 29,
+  "children": [
+   {
+    "code": "100",
+    "title": "총칙",
+    "page_from": 30,
+    "has_children": true
+   },
+   {
+    "code": "110",
+    "title": "일반사항",
+    "page_from": 31,
+    "has_children": true
+   },
+   {
+    "code": "120",
+    "title": "전선",
+    "page_from": 40,
+    "has_children": true
+   },
+   {
+    "code": "130",
+    "title": "전로의 절연",
+    "page_from": 45,
+    "has_children": true
+   },
+   {
+    "code": "140",
+    "title": "접지시스템",
+    "page_from": 55,
+    "has_children": true
+   },
+   {
+    "code": "150",
+    "title": "피뢰시스템",
+    "page_from": 67,
+    "has_children": true
+   },
+   {
+    "code": "160",
+    "title": "발전설비 용접",
+    "page_from": 75,
+    "has_children": true
+   },
+   {
+    "code": "170",
+    "title": "발전설비 비파괴검사",
+    "page_from": 106,
+    "has_children": true
+   }
+  ]
+ },
+ {
+  "code": "2",
+  "title": "저압 전기설비",
+  "page_from": 170,
+  "children": [
+   {
+    "code": "200",
+    "title": "통칙",
+    "page_from": 171,
+    "has_children": true
+   },
+   {
+    "code": "210",
+    "title": "안전을 위한 보호",
+    "page_from": 178,
+    "has_children": true
+   },
+   {
+    "code": "220",
+    "title": "전선로",
+    "page_from": 210,
+    "has_children": true
+   },
+   {
+    "code": "230",
+    "title": "배선 및 조명설비 등",
+    "page_from": 225,
+    "has_children": true
+   },
+   {
+    "code": "240",
+    "title": "특수설비",
+    "page_from": 298,
+    "has_children": true
+   }
+  ]
+ },
+ {
+  "code": "3",
+  "title": "고압․특고압 전기설비",
+  "page_from": 356,
+  "children": [
+   {
+    "code": "300",
+    "title": "통칙",
+    "page_from": 357,
+    "has_children": true
+   },
+   {
+    "code": "310",
+    "title": "안전을 위한 보호",
+    "page_from": 359,
+    "has_children": true
+   },
+   {
+    "code": "320",
+    "title": "접지설비",
+    "page_from": 361,
+    "has_children": true
+   },
+   {
+    "code": "330",
+    "title": "전선로",
+    "page_from": 367,
+    "has_children": true
+   },
+   {
+    "code": "340",
+    "title": "기계·기구 시설 및 옥내배선",
+    "page_from": 464,
+    "has_children": true
+   },
+   {
+    "code": "350",
+    "title": "발전소, 변전소, 개폐소 등의 전기설비",
+    "page_from": 478,
+    "has_children": true
+   },
+   {
+    "code": "360",
+    "title": "전력보안통신설비",
+    "page_from": 486,
+    "has_children": true
+   }
+  ]
+ },
+ {
+  "code": "4",
+  "title": "전기철도설비",
+  "page_from": 501,
+  "children": [
+   {
+    "code": "400",
+    "title": "동직",
+    "page_from": 502,
+    "has_children": true
+   },
+   {
+    "code": "410",
+    "title": "전기철도의 전기방식",
+    "page_from": 504,
+    "has_children": true
+   },
+   {
+    "code": "420",
+    "title": "전기철도의 변전방식",
+    "page_from": 506,
+    "has_children": true
+   },
+   {
+    "code": "430",
+    "title": "전기철도의 전차선로",
+    "page_from": 508,
+    "has_children": true
+   },
+   {
+    "code": "440",
+    "title": "전기철도의 전기철도차량 설비",
+    "page_from": 513,
+    "has_children": true
+   },
+   {
+    "code": "450",
+    "title": "전기철도의 설비를 위한 보호",
+    "page_from": 516,
+    "has_children": true
+   },
+   {
+    "code": "460",
+    "title": "전기철도의 안전을 위한 보호",
+    "page_from": 519,
+    "has_children": true
+   }
+  ]
+ },
+ {
+  "code": "5",
+  "title": "분산형전원설비",
+  "page_from": 524,
+  "children": [
+   {
+    "code": "500",
+    "title": "통칙",
+    "page_from": 525,
+    "has_children": true
+   },
+   {
+    "code": "510",
+    "title": "전기저장장치",
+    "page_from": 528,
+    "has_children": true
+   },
+   {
+    "code": "520",
+    "title": "태양광발전설비",
+    "page_from": 533,
+    "has_children": true
+   },
+   {
+    "code": "530",
+    "title": "풍력발전설비",
+    "page_from": 537,
+    "has_children": true
+   },
+   {
+    "code": "540",
+    "title": "연료전지설비",
+    "page_from": 542,
+    "has_children": true
+   }
+  ]
+ },
+ {
+  "code": "6",
+  "title": "발전용 화력설비",
+  "page_from": 545,
+  "children": [
+   {
+    "code": "600",
+    "title": "통칙",
+    "page_from": 546,
+    "has_children": true
+   },
+   {
+    "code": "605",
+    "title": "보일러 및 부속설비",
+    "page_from": 547,
+    "has_children": true
+   },
+   {
+    "code": "610",
+    "title": "압력용기 및 부속설비",
+    "page_from": 631,
+    "has_children": true
+   },
+   {
+    "code": "615",
+    "title": "배관 및 부속설비",
+    "page_from": 726,
+    "has_children": true
+   },
+   {
+    "code": "620",
+    "title": "증기터빈 및 부속설비",
+    "page_from": 751,
+    "has_children": true
+   },
+   {
+    "code": "625",
+    "title": "가스터빈 및 부속설비",
+    "page_from": 755,
+    "has_children": true
+   },
+   {
+    "code": "630",
+    "title": "내연기관 및 부속설비",
+    "page_from": 758,
+    "has_children": true
+   },
+   {
+    "code": "635",
+    "title": "액화가스 연료연소설비",
+    "page_from": 761,
+    "has_children": true
+   },
+   {
+    "code": "640",
+    "title": "탈황 · 탈질설비",
+    "page_from": 789,
+    "has_children": true
+   },
+   {
+    "code": "645",
+    "title": "가스화로설비 및 부속설비",
+    "page_from": 792,
+    "has_children": true
+   }
+  ]
+ },
+ {
+  "code": "7",
+  "title": "발전용 수력설비",
+  "page_from": 1139,
+  "children": [
+   {
+    "code": "700",
+    "title": "통칙",
+    "page_from": 1140,
+    "has_children": true
+   },
+   {
+    "code": "705",
+    "title": "댐",
+    "page_from": 1141,
+    "has_children": true
+   },
+   {
+    "code": "710",
+    "title": "수로",
+    "page_from": 1153,
+    "has_children": true
+   },
+   {
+    "code": "715",
+    "title": "일반 수력발전 설비",
+    "page_from": 1162,
+    "has_children": true
+   },
+   {
+    "code": "720",
+    "title": "양수발전 설비",
+    "page_from": 1167,
+    "has_children": true
+   },
+   {
+    "code": "725",
+    "title": "기타 시설",
+    "page_from": 1169,
+    "has_children": true
+   }
+  ]
+ }
+]
