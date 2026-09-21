@@ -74,6 +74,8 @@ function Icon({ name, size = 20 }: { name: string; size?: number }) {
     clock: "M12 7v5l3 3M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z",
     star: "M12 3.5 14.5 9l6 .8-4.3 4.2 1 6L12 17l-5.2 3 1-6-4.3-4.2 6-.8Z",
     route: "M4 6h9a3 3 0 0 1 0 6H7a3 3 0 0 0 0 6h9M4 6l3-3M4 6l3 3M20 18l-3 3M20 18l-3-3",
+    arrowUpRight: "M7 17 17 7M9 7h8v8",
+    info: "M12 8h.01M11 12h1v5h1M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z",
   }
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -105,7 +107,7 @@ export default function App() {
   const [selected, setSelected] = useState("")
   const [chapterOpen, setChapterOpen] = useState(true)
   const [mobileTocOpen, setMobileTocOpen] = useState(false)
-  const [mobileRailOpen, setMobileRailOpen] = useState(false)
+  const [toolsOpen, setToolsOpen] = useState(false)
   const [bookmarks, setBookmarks] = useState<string[]>([])
   const [notes, setNotes] = useState<Record<string, string>>({})
   const [recent, setRecent] = useState<string[]>([])
@@ -137,13 +139,13 @@ export default function App() {
         if (search) setSearch(false)
         else if (aiOpen) setAiOpen(false)
         else if (mobileTocOpen) setMobileTocOpen(false)
-        else if (mobileRailOpen) setMobileRailOpen(false)
+        else if (toolsOpen) setToolsOpen(false)
         else if (selMenu) setSelMenu(null)
       }
     }
     window.addEventListener("keydown", onKey)
     return () => window.removeEventListener("keydown", onKey)
-  }, [search, aiOpen, mobileTocOpen, mobileRailOpen, selMenu])
+  }, [search, aiOpen, mobileTocOpen, toolsOpen, selMenu])
   useEffect(() => {
     if (search) searchInput.current?.focus()
   }, [search])
@@ -170,7 +172,7 @@ export default function App() {
   const goLibrary = () => {
     setScreen("library")
     setMobileTocOpen(false)
-    setMobileRailOpen(false)
+    setToolsOpen(false)
     setSelMenu(null)
   }
 
@@ -179,7 +181,7 @@ export default function App() {
     setImageError(false)
     setSelMenu(null)
     setMobileTocOpen(false)
-    setMobileRailOpen(false)
+    setToolsOpen(false)
     setSearch(false)
     setScreen("reader")
     if (id !== COVER_ID) {
@@ -249,34 +251,66 @@ export default function App() {
 
   const librarySection = () => (
     <div className="c-library">
-      <div className="c-library-head">
-        <h1>KEC 규정 라이브러리</h1>
-        <p>한국전기설비규정(KEC)의 대분류를 살펴보고, 필요한 조항을 찾아 원문을 확인하세요.</p>
-      </div>
+      <section className="c-hero">
+        <span className="c-eyebrow">— KEC NAVIGATOR</span>
+        <h1 className="c-hero-title">
+          전기설비 기준을
+          <br />
+          <span className="c-grad-text">더 명확하게 탐색하다</span>
+        </h1>
+        <p className="c-hero-sub">한국전기설비규정(KEC) 8개 대분류를 넘나들며, 필요한 조항을 빠르게 찾아보세요.</p>
 
-      <div className="c-catalog" role="list" aria-label="규정 대분류">
-        {chapters.map((c) => {
-          const subCount = sections.length && c.id === "1" ? sections.length : 0
-          return (
-            <button className="c-cat-card" key={c.id} role="listitem" onClick={() => goReader(c.id)}>
-              <div className="c-cat-top">
-                <span className="c-cat-badge">{c.id}</span>
-                {subCount > 0 ? <span className="c-cat-count">{subCount}개 조항</span> : <span className="c-cat-count muted">표지만 연결됨</span>}
-              </div>
-              <h3>{c.title}</h3>
-              <p>{c.desc}</p>
-              <span className="c-cat-cta">
-                탐색하기 <Icon name="chevron" size={14} />
-              </span>
-            </button>
-          )
-        })}
-      </div>
+        <button className="c-hero-search" onClick={() => setSearch(true)}>
+          <Icon name="search" size={18} />
+          <span>규정, 조항 또는 키워드 검색</span>
+          <kbd>⌘K</kbd>
+        </button>
 
-      <div className="c-side-sections">
-        <section className="c-side-block">
+        <div className="c-hero-stats">
+          <div className="c-stat">
+            <span>CHAPTERS</span>
+            <b>{chapters.length}개 대분류</b>
+          </div>
+          <div className="c-stat">
+            <span>ARTICLES LINKED</span>
+            <b>{sections.length}개 조항 연결</b>
+          </div>
+          <div className="c-stat">
+            <span>VERSION</span>
+            <b>{version}</b>
+          </div>
+        </div>
+      </section>
+
+      <section className="c-cats">
+        <div className="c-section-head">
+          <span className="c-eyebrow">— CATEGORIES</span>
+          <h2>대분류에서 시작하기</h2>
+        </div>
+        <div className="c-cat-rail" role="list" aria-label="규정 대분류">
+          {chapters.map((c) => {
+            const subCount = sections.length && c.id === "1" ? sections.length : 0
+            return (
+              <button className="c-cat-card" key={c.id} role="listitem" onClick={() => goReader(c.id)}>
+                <div className="c-cat-card-top">
+                  <span className="c-cat-index">{c.id.padStart(2, "0")}</span>
+                  <span className="c-cat-arrow" aria-hidden="true">
+                    <Icon name="arrowUpRight" size={15} />
+                  </span>
+                </div>
+                <h3>{c.title}</h3>
+                <span className={`c-cat-tag ${subCount ? "" : "muted"}`}>{subCount > 0 ? `${subCount}개 조항 연결` : "표지만 연결됨"}</span>
+                <p className="c-cat-desc">{c.desc}</p>
+              </button>
+            )
+          })}
+        </div>
+      </section>
+
+      <section className="c-secondary">
+        <div className="c-secondary-col">
           <h2>
-            <Icon name="clock" size={15} /> 최근 본 조항
+            <Icon name="clock" size={13} /> 최근 본 조항
           </h2>
           {recent.length ? (
             <ul className="c-side-list">
@@ -296,11 +330,11 @@ export default function App() {
           ) : (
             <p className="c-side-empty">최근에 열람한 조항이 여기에 표시됩니다.</p>
           )}
-        </section>
+        </div>
 
-        <section className="c-side-block">
+        <div className="c-secondary-col">
           <h2>
-            <Icon name="star" size={15} /> 자주 찾는 조항 <small className="c-example-tag">예시</small>
+            <Icon name="star" size={13} /> 자주 찾는 조항 <small className="c-example-tag">예시</small>
           </h2>
           <ul className="c-side-list">
             {curatedFrequent.map((id) => {
@@ -316,13 +350,12 @@ export default function App() {
               )
             })}
           </ul>
-        </section>
+        </div>
 
-        <section className="c-side-block">
+        <div className="c-secondary-col">
           <h2>
-            <Icon name="route" size={15} /> 추천 탐색 경로
+            <Icon name="route" size={13} /> 추천 탐색 경로
           </h2>
-          <p className="c-side-sub">규정이 처음이라면 이 순서로 살펴보세요.</p>
           <div className="c-path-row">
             {curatedPath.map((id, i) => {
               const e = entryOf(id)
@@ -333,17 +366,17 @@ export default function App() {
                     <span className="c-mini-badge">{id}</span>
                     {e.title}
                   </button>
-                  {i < curatedPath.length - 1 && <Icon name="chevron" size={13} />}
+                  {i < curatedPath.length - 1 && <Icon name="chevron" size={12} />}
                 </span>
               )
             })}
           </div>
-        </section>
+        </div>
 
         {bookmarks.length > 0 && (
-          <section className="c-side-block">
+          <div className="c-secondary-col">
             <h2>
-              <Icon name="bookmarkFilled" size={15} /> 북마크
+              <Icon name="bookmarkFilled" size={13} /> 북마크
             </h2>
             <ul className="c-side-list">
               {bookmarks.map((id) => {
@@ -359,9 +392,9 @@ export default function App() {
                 )
               })}
             </ul>
-          </section>
+          </div>
         )}
-      </div>
+      </section>
 
       <button className="c-cover-link" onClick={() => goReader(COVER_ID)}>
         <Icon name="book" size={14} /> 전체 규정 원문 표지 보기
@@ -588,8 +621,8 @@ export default function App() {
           <button className="c-icon-btn" aria-label="링크 공유" title="링크 공유" onClick={share}>
             <Icon name="share" size={17} />
           </button>
-          <button className="c-icon-btn mobile-only" aria-label="주석·북마크 열기" onClick={() => setMobileRailOpen(true)}>
-            <Icon name="note" size={17} />
+          <button className={`c-icon-btn ${toolsOpen ? "active" : ""}`} aria-label="주석·북마크·관련 조항 열기" title="주석·북마크·관련 조항" aria-haspopup="dialog" aria-expanded={toolsOpen} onClick={() => setToolsOpen(true)}>
+            <Icon name="info" size={17} />
           </button>
         </div>
       </div>
@@ -599,9 +632,6 @@ export default function App() {
           {tocList(goReader)}
         </aside>
         <main className="c-doc-col">{readerBody()}</main>
-        <aside className="c-rail-col" aria-label="주석 및 관련 조항">
-          {railContent()}
-        </aside>
       </div>
 
       {selMenu && (
@@ -636,12 +666,13 @@ export default function App() {
           </aside>
         </div>
       )}
-      {mobileRailOpen && (
-        <div className="c-drawer-backdrop" onClick={() => setMobileRailOpen(false)}>
+      {/* 우측 도구 영역: 데스크톱·모바일 모두에서 필요할 때만 열리는 글래스 패널 */}
+      {toolsOpen && (
+        <div className="c-drawer-backdrop" onClick={() => setToolsOpen(false)}>
           <aside className="c-drawer right" onClick={(e) => e.stopPropagation()} aria-label="주석 및 북마크">
             <div className="c-drawer-head">
               <span>주석 · 북마크 · 관련 조항</span>
-              <button className="c-icon-btn" aria-label="닫기" onClick={() => setMobileRailOpen(false)}>
+              <button className="c-icon-btn" aria-label="닫기" onClick={() => setToolsOpen(false)}>
                 <Icon name="close" size={17} />
               </button>
             </div>
@@ -720,28 +751,31 @@ export default function App() {
 
   return (
     <div className={`libapp ${dark ? "dark" : ""}`}>
-      <header className="c-top">
-        <button className="c-brand-btn" onClick={goLibrary} aria-label="라이브러리로 이동" title="라이브러리로 이동">
-          <Brand />
-        </button>
-        <button className="c-search-trigger" onClick={() => setSearch(true)} ref={searchButton}>
-          <Icon name="search" size={15} />
-          <span>조항 번호, 키워드로 검색</span>
-          <kbd>⌘K</kbd>
-        </button>
-        <div className="c-top-actions">
-          <div className="c-version-select">
-            <select aria-label="규정 버전 선택" value={version} onChange={(e) => setVersion(e.target.value)}>
-              <option>2026-01-05</option>
-              <option>2020-12-31</option>
-            </select>
-            <span className="c-version-caret" aria-hidden="true">
-              <Icon name="chevronDown" size={13} />
-            </span>
-          </div>
-          <button className="c-icon-btn" aria-label={dark ? "라이트 모드로 전환" : "다크 모드로 전환"} title={dark ? "라이트 모드로 전환" : "다크 모드로 전환"} onClick={() => setDark((d) => !d)}>
-            <Icon name={dark ? "sun" : "moon"} size={17} />
+      <div className="c-ambient" aria-hidden="true" />
+      <header className="c-top-wrap">
+        <div className="c-top">
+          <button className="c-brand-btn" onClick={goLibrary} aria-label="라이브러리로 이동" title="라이브러리로 이동">
+            <Brand />
           </button>
+          <button className="c-search-trigger" onClick={() => setSearch(true)} ref={searchButton}>
+            <Icon name="search" size={15} />
+            <span>검색</span>
+            <kbd>⌘K</kbd>
+          </button>
+          <div className="c-top-actions">
+            <div className="c-version-select">
+              <select aria-label="규정 버전 선택" value={version} onChange={(e) => setVersion(e.target.value)}>
+                <option>2026-01-05</option>
+                <option>2020-12-31</option>
+              </select>
+              <span className="c-version-caret" aria-hidden="true">
+                <Icon name="chevronDown" size={13} />
+              </span>
+            </div>
+            <button className="c-icon-btn" aria-label={dark ? "네이비 톤으로 전환" : "옵시디언 톤으로 전환"} title={dark ? "네이비 톤으로 전환" : "옵시디언 톤으로 전환"} onClick={() => setDark((d) => !d)}>
+              <Icon name={dark ? "sun" : "moon"} size={17} />
+            </button>
+          </div>
         </div>
       </header>
 
