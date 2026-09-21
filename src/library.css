@@ -50,7 +50,10 @@
 }
 
 .libapp button, .libapp select, .libapp input, .libapp textarea { font: inherit; color: inherit; }
-.libapp button { cursor: pointer; background: none; border: none; }
+/* :where() keeps this reset at zero specificity so every component's own
+   background/border declaration (even a single class like .c-ai-fab) wins
+   without needing !important or extra specificity games. */
+.libapp :where(button) { cursor: pointer; background: none; border: none; }
 .libapp button:disabled { opacity: 0.32; cursor: default; }
 .libapp button:focus-visible, .libapp a:focus-visible, .libapp select:focus-visible,
 .libapp input:focus-visible, .libapp textarea:focus-visible {
@@ -388,10 +391,25 @@
 
 .c-ai-scrim { position: fixed; inset: 0; z-index: 40; display: flex; align-items: flex-end; justify-content: center; background: rgba(2, 3, 6, 0.5); backdrop-filter: blur(2px); }
 .c-ai-sheet {
-  width: 100%; max-width: 560px; max-height: 72vh; margin: 0 18px 18px; display: flex; flex-direction: column;
+  position: relative; width: 100%; max-width: var(--ai-width, 560px); max-height: 72vh; margin: 0 18px 18px;
+  display: flex; flex-direction: column;
   background: rgba(10, 12, 20, 0.86); backdrop-filter: blur(28px) saturate(150%); -webkit-backdrop-filter: blur(28px) saturate(150%);
   border: 1px solid var(--line-strong); border-radius: 22px 22px 16px 16px; box-shadow: 0 -20px 60px -18px rgba(0, 0, 0, 0.6), var(--shadow-lg);
 }
+
+/* Drag handles on both edges — the sheet stays centered, so either side widens/
+   narrows it symmetrically. */
+.c-ai-resize {
+  position: absolute; top: 50%; transform: translateY(-50%); width: 22px; height: 68px;
+  display: flex; align-items: center; justify-content: center; cursor: col-resize; touch-action: none; z-index: 2;
+}
+.c-ai-resize.left { left: -11px; }
+.c-ai-resize.right { right: -11px; }
+.c-ai-resize span {
+  width: 4px; height: 40px; border-radius: 999px; background: var(--line-strong);
+  transition: background 0.15s, height 0.15s;
+}
+.c-ai-resize:hover span, .c-ai-resize:focus-visible span { background: var(--accent-ink); height: 52px; }
 .c-ai-sheet-head { display: flex; align-items: center; justify-content: space-between; padding: 15px 18px; border-bottom: 1px solid var(--line); }
 .c-ai-sheet-head span { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; }
 .c-ai-sheet-head svg { color: var(--accent-ink); }
@@ -514,6 +532,7 @@
   .c-ai-fab { right: 16px; bottom: 16px; padding: 15px; }
   .c-ai-scrim { align-items: flex-end; }
   .c-ai-sheet { max-width: none; margin: 0; max-height: 84vh; border-radius: 18px 18px 0 0; }
+  .c-ai-resize { display: none; }
 
   .c-drawer.right { max-width: none; width: 100%; }
 

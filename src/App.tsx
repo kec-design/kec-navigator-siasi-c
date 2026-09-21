@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react"
-import type { CSSProperties } from "react"
+import type { CSSProperties, PointerEvent as ReactPointerEvent } from "react"
 import "./library.css"
 import { chapters, sections, chapter1Body, previewOf, chapterHasBody } from "./kecData"
 import type { BodyNode } from "./kecData"
@@ -138,6 +138,9 @@ export default function App() {
   const [aiOpen, setAiOpen] = useState(false)
   const [aiDraft, setAiDraft] = useState("")
   const [aiMessages, setAiMessages] = useState<AiTurn[]>([])
+  const [aiWidth, setAiWidth] = useState(560)
+  const AI_WIDTH_MIN = 360
+  const AI_WIDTH_MAX = 880
   const [selMenu, setSelMenu] = useState<{ x: number; y: number; text: string } | null>(null)
   const docBody = useRef<HTMLDivElement>(null)
 
@@ -727,10 +730,57 @@ export default function App() {
 
   // ---------- AI slide-up sheet (on-demand only) ----------
 
+  // 채팅 패널은 화면 중앙 하단에 고정된 채로 좌우 양쪽이 대칭으로 넓어지므로,
+  // 어느 쪽 손잡이를 잡아도 포인터 이동량의 2배만큼 폭을 바꿔야 실제 가장자리가
+  // 손끝을 따라온다. dir: 오른쪽 손잡이는 +1, 왼쪽 손잡이는 -1.
+  const startAiResize = (e: ReactPointerEvent<HTMLButtonElement>, dir: 1 | -1) => {
+    e.currentTarget.setPointerCapture(e.pointerId)
+    const startX = e.clientX
+    const startWidth = aiWidth
+    const onMove = (ev: PointerEvent) => {
+      const delta = (ev.clientX - startX) * dir * 2
+      setAiWidth(Math.min(AI_WIDTH_MAX, Math.max(AI_WIDTH_MIN, startWidth + delta)))
+    }
+    const onUp = () => {
+      window.removeEventListener("pointermove", onMove)
+      window.removeEventListener("pointerup", onUp)
+    }
+    window.addEventListener("pointermove", onMove)
+    window.addEventListener("pointerup", onUp)
+  }
+  const nudgeAiWidth = (delta: number) => setAiWidth((w) => Math.min(AI_WIDTH_MAX, Math.max(AI_WIDTH_MIN, w + delta)))
+
+  const aiResizeHandle = (dir: 1 | -1) => (
+    <button
+      className={`c-ai-resize ${dir === 1 ? "right" : "left"}`}
+      aria-label="채팅 영역 너비 조절"
+      title="드래그하거나 화살표 키로 너비를 조절하세요"
+      role="separator"
+      aria-orientation="vertical"
+      aria-valuenow={Math.round(aiWidth)}
+      aria-valuemin={AI_WIDTH_MIN}
+      aria-valuemax={AI_WIDTH_MAX}
+      onPointerDown={(e) => startAiResize(e, dir)}
+      onKeyDown={(e) => {
+        if (e.key === "ArrowLeft") {
+          e.preventDefault()
+          nudgeAiWidth(dir === 1 ? -24 : 24)
+        } else if (e.key === "ArrowRight") {
+          e.preventDefault()
+          nudgeAiWidth(dir === 1 ? 24 : -24)
+        }
+      }}
+    >
+      <span />
+    </button>
+  )
+
   const aiSheet = () =>
     aiOpen && (
       <div className="c-ai-scrim" onClick={() => setAiOpen(false)}>
-        <div className="c-ai-sheet" role="dialog" aria-modal="true" aria-label="AI CHAT" onClick={(e) => e.stopPropagation()}>
+        <div className="c-ai-sheet" role="dialog" aria-modal="true" aria-label="AI CHAT" style={{ "--ai-width": `${aiWidth}px` } as CSSProperties} onClick={(e) => e.stopPropagation()}>
+          {aiResizeHandle(-1)}
+          {aiResizeHandle(1)}
           <div className="c-ai-sheet-head">
             <span>
               <Icon name="sparkle" size={15} /> AI CHAT
