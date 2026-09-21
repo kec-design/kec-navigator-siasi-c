@@ -251,135 +251,109 @@ export default function App() {
 
   const librarySection = () => (
     <div className="c-library">
-      <section className="c-hero">
-        <span className="c-eyebrow">— KEC NAVIGATOR</span>
-        <h1 className="c-hero-title">
-          전기설비 기준을
-          <br />
-          <span className="c-grad-text">더 명확하게 탐색하다</span>
-        </h1>
-        <p className="c-hero-sub">한국전기설비규정(KEC) 8개 대분류를 넘나들며, 필요한 조항을 빠르게 찾아보세요.</p>
-
-        <button className="c-hero-search" onClick={() => setSearch(true)}>
-          <Icon name="search" size={18} />
-          <span>규정, 조항 또는 키워드 검색</span>
-          <kbd>⌘K</kbd>
-        </button>
-
-        <div className="c-hero-stats">
-          <div className="c-stat">
-            <span>CHAPTERS</span>
-            <b>{chapters.length}개 대분류</b>
-          </div>
-          <div className="c-stat">
-            <span>ARTICLES LINKED</span>
-            <b>{sections.length}개 조항 연결</b>
-          </div>
-          <div className="c-stat">
-            <span>VERSION</span>
-            <b>{version}</b>
-          </div>
+      {/* 컴팩트 워크바: 랜딩 히어로가 아니라 작업 도구줄 — 제목 한 줄 + 검색 + AI 진입점 */}
+      <section className="c-workbar">
+        <div className="c-workbar-title">
+          <span className="c-eyebrow">— KEC NAVIGATOR</span>
+          <h1>
+            전기설비 기준을 <span className="c-grad-text">더 명확하게 탐색하다</span>
+          </h1>
+          <p>
+            {chapters.length}개 대분류 · {sections.length}개 조항 연결 · {version} 버전
+          </p>
+        </div>
+        <div className="c-workbar-tools">
+          <button className="c-search-bar-btn" onClick={() => setSearch(true)}>
+            <Icon name="search" size={16} />
+            <span>규정, 조항 또는 키워드 검색</span>
+            <kbd>⌘K</kbd>
+          </button>
+          <button className="c-ai-entry-btn" onClick={() => setAiOpen(true)}>
+            <Icon name="sparkle" size={15} />
+            AI 도우미에게 물어보기
+          </button>
         </div>
       </section>
 
-      <section className="c-cats">
-        <div className="c-section-head">
-          <span className="c-eyebrow">— CATEGORIES</span>
-          <h2>대분류에서 시작하기</h2>
-        </div>
-        <div className="c-cat-rail" role="list" aria-label="규정 대분류">
-          {chapters.map((c) => {
-            const subCount = sections.length && c.id === "1" ? sections.length : 0
-            return (
-              <button className="c-cat-card" key={c.id} role="listitem" onClick={() => goReader(c.id)}>
-                <div className="c-cat-card-top">
-                  <span className="c-cat-index">{c.id.padStart(2, "0")}</span>
-                  <span className="c-cat-arrow" aria-hidden="true">
-                    <Icon name="arrowUpRight" size={15} />
+      <div className="c-workspace">
+        <section className="c-directory">
+          <div className="c-section-head-row">
+            <h2>대분류</h2>
+          </div>
+          <div className="c-dir-list" role="list" aria-label="규정 대분류">
+            {chapters.map((c) => {
+              const subCount = sections.length && c.id === "1" ? sections.length : 0
+              return (
+                <button className="c-dir-row" key={c.id} role="listitem" onClick={() => goReader(c.id)}>
+                  <span className="c-mini-badge">{c.id}</span>
+                  <span className="c-dir-main">
+                    <b>{c.title}</b>
+                    <small>{c.desc}</small>
                   </span>
-                </div>
-                <h3>{c.title}</h3>
-                <span className={`c-cat-tag ${subCount ? "" : "muted"}`}>{subCount > 0 ? `${subCount}개 조항 연결` : "표지만 연결됨"}</span>
-                <p className="c-cat-desc">{c.desc}</p>
-              </button>
-            )
-          })}
-        </div>
-      </section>
-
-      <section className="c-secondary">
-        <div className="c-secondary-col">
-          <h2>
-            <Icon name="clock" size={13} /> 최근 본 조항
-          </h2>
-          {recent.length ? (
-            <ul className="c-side-list">
-              {recent.map((id) => {
-                const e = entryOf(id)
-                if (!e) return null
-                return (
-                  <li key={id}>
-                    <button onClick={() => goReader(id)}>
-                      <span className="c-mini-badge">{id}</span>
-                      {e.title}
-                    </button>
-                  </li>
-                )
-              })}
-            </ul>
-          ) : (
-            <p className="c-side-empty">최근에 열람한 조항이 여기에 표시됩니다.</p>
-          )}
-        </div>
-
-        <div className="c-secondary-col">
-          <h2>
-            <Icon name="star" size={13} /> 자주 찾는 조항 <small className="c-example-tag">예시</small>
-          </h2>
-          <ul className="c-side-list">
-            {curatedFrequent.map((id) => {
-              const e = entryOf(id)
-              if (!e) return null
-              return (
-                <li key={id}>
-                  <button onClick={() => goReader(id)}>
-                    <span className="c-mini-badge">{id}</span>
-                    {e.title}
-                  </button>
-                </li>
-              )
-            })}
-          </ul>
-        </div>
-
-        <div className="c-secondary-col">
-          <h2>
-            <Icon name="route" size={13} /> 추천 탐색 경로
-          </h2>
-          <div className="c-path-row">
-            {curatedPath.map((id, i) => {
-              const e = entryOf(id)
-              if (!e) return null
-              return (
-                <span className="c-path-item" key={id}>
-                  <button onClick={() => goReader(id)}>
-                    <span className="c-mini-badge">{id}</span>
-                    {e.title}
-                  </button>
-                  {i < curatedPath.length - 1 && <Icon name="chevron" size={12} />}
-                </span>
+                  <span className={`c-dir-meta ${subCount ? "" : "muted"}`}>{subCount > 0 ? `${subCount}개 조항 연결` : "표지만 연결됨"}</span>
+                  <Icon name="chevron" size={16} />
+                </button>
               )
             })}
           </div>
-        </div>
+          <button className="c-cover-link" onClick={() => goReader(COVER_ID)}>
+            <Icon name="book" size={14} /> 전체 규정 원문 표지 보기
+          </button>
+        </section>
 
-        {bookmarks.length > 0 && (
-          <div className="c-secondary-col">
+        <aside className="c-side">
+          <div className="c-side-panel">
             <h2>
-              <Icon name="bookmarkFilled" size={13} /> 북마크
+              <Icon name="clock" size={13} /> 최근 본 조항
+            </h2>
+            {recent.length ? (
+              <ul className="c-side-list">
+                {recent.map((id) => {
+                  const e = entryOf(id)
+                  if (!e) return null
+                  return (
+                    <li key={id}>
+                      <button onClick={() => goReader(id)}>
+                        <span className="c-mini-badge">{id}</span>
+                        {e.title}
+                      </button>
+                    </li>
+                  )
+                })}
+              </ul>
+            ) : (
+              <p className="c-side-empty">최근에 열람한 조항이 여기에 표시됩니다.</p>
+            )}
+          </div>
+
+          {bookmarks.length > 0 && (
+            <div className="c-side-panel">
+              <h2>
+                <Icon name="bookmarkFilled" size={13} /> 북마크
+              </h2>
+              <ul className="c-side-list">
+                {bookmarks.map((id) => {
+                  const e = entryOf(id)
+                  if (!e) return null
+                  return (
+                    <li key={id}>
+                      <button onClick={() => goReader(id)}>
+                        <span className="c-mini-badge">{id}</span>
+                        {e.title}
+                      </button>
+                    </li>
+                  )
+                })}
+              </ul>
+            </div>
+          )}
+
+          <div className="c-side-panel">
+            <h2>
+              <Icon name="star" size={13} /> 자주 찾는 조항 <small className="c-example-tag">예시</small>
             </h2>
             <ul className="c-side-list">
-              {bookmarks.map((id) => {
+              {curatedFrequent.map((id) => {
                 const e = entryOf(id)
                 if (!e) return null
                 return (
@@ -393,12 +367,29 @@ export default function App() {
               })}
             </ul>
           </div>
-        )}
-      </section>
 
-      <button className="c-cover-link" onClick={() => goReader(COVER_ID)}>
-        <Icon name="book" size={14} /> 전체 규정 원문 표지 보기
-      </button>
+          <div className="c-side-panel">
+            <h2>
+              <Icon name="route" size={13} /> 추천 탐색 경로
+            </h2>
+            <div className="c-path-row">
+              {curatedPath.map((id, i) => {
+                const e = entryOf(id)
+                if (!e) return null
+                return (
+                  <span className="c-path-item" key={id}>
+                    <button onClick={() => goReader(id)}>
+                      <span className="c-mini-badge">{id}</span>
+                      {e.title}
+                    </button>
+                    {i < curatedPath.length - 1 && <Icon name="chevron" size={12} />}
+                  </span>
+                )
+              })}
+            </div>
+          </div>
+        </aside>
+      </div>
     </div>
   )
 
