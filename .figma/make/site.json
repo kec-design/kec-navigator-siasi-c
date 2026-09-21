@@ -1,0 +1,11 @@
+{
+  "description": "A calm, professional KEC regulation library with an immersive full-screen document reader and on-demand AI assistance.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  },
+  "title": "KEC Navigator | Type C"
+}

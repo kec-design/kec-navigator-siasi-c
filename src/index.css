@@ -1,0 +1,108 @@
+@import 'tailwindcss';
+
+@font-face {
+  font-family: "Pretendard Variable:Bold";
+  src: url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Pretendard Variable:Medium";
+  src: url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Pretendard Variable:Regular";
+  src: url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Pretendard Variable:SemiBold";
+  src: url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Pretendard Variable:ExtraBold";
+  src: url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.woff2") format("woff2");
+  font-weight: 800;
+  font-style: normal;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes rotate-gradient {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.cursor-blink {
+  animation: blink 1s ease-in-out infinite;
+}
+
+@keyframes title-color-sweep {
+  0% {
+    background-position: -100% center;
+    opacity: 1;
+  }
+  65% {
+    background-position: 0% center;
+    opacity: 1;
+  }
+  100% {
+    background-position: 0% center;
+    opacity: 0;
+  }
+}
+
+@keyframes blob-drift-1 {
+  0%   { transform: translate(0px,   0px)   scale(1);    }
+  25%  { transform: translate(40px, -30px)  scale(1.05); }
+  50%  { transform: translate(20px,  50px)  scale(0.95); }
+  75%  { transform: translate(-30px, 20px)  scale(1.03); }
+  100% { transform: translate(0px,   0px)   scale(1);    }
+}
+@keyframes blob-drift-2 {
+  0%   { transform: translate(0px,  0px)   scale(1);    }
+  25%  { transform: translate(-50px, 30px) scale(1.06); }
+  50%  { transform: translate(30px, -40px) scale(0.94); }
+  75%  { transform: translate(40px,  20px) scale(1.02); }
+  100% { transform: translate(0px,  0px)   scale(1);    }
+}
+@keyframes blob-drift-3 {
+  0%   { transform: translate(0px,   0px)  scale(1);    }
+  30%  { transform: translate(30px,  40px) scale(1.04); }
+  60%  { transform: translate(-40px, 10px) scale(0.96); }
+  80%  { transform: translate(10px, -30px) scale(1.02); }
+  100% { transform: translate(0px,   0px)  scale(1);    }
+}
+.blob-1 { animation: blob-drift-1 18s ease-in-out infinite; }
+.blob-2 { animation: blob-drift-2 24s ease-in-out infinite; }
+.blob-3 { animation: blob-drift-3 20s ease-in-out infinite; }
+
+@keyframes sparkle-pulse {
+  0%   { opacity: 1; transform: scale(1); }
+  30%  { opacity: 0.75; transform: scale(0.92); }
+  65%  { opacity: 1; transform: scale(1.08); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.sparkle-star {
+  animation: sparkle-pulse 1.15s cubic-bezier(0.4, 0, 0.2, 1) both;
+  animation-iteration-count: 1;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.sparkle-star-1 { animation-delay: 0.15s; }
+.sparkle-star-2 { animation-delay: 0.27s; }
+.sparkle-star-3 { animation-delay: 0.40s; }
+
+html,
+body,
+#root {
+  height: 100%;
+}
