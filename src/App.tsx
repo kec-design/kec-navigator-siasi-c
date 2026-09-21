@@ -256,7 +256,7 @@ export default function App() {
         <div className="c-workbar-title">
           <span className="c-eyebrow">— KEC NAVIGATOR</span>
           <h1>
-            전기설비 기준을 <span className="c-grad-text">더 명확하게 탐색하다</span>
+            전기설비 기준을 <span className="c-grad-text">더 명확하게 탐색해보세요</span>
           </h1>
           <p>
             {chapters.length}개 대분류 · {sections.length}개 조항 연결 · {version} 버전
