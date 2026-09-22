@@ -106,13 +106,6 @@ function Icon({ name, size = 20, filled = false }: { name: string; size?: number
   )
 }
 
-// AI CHAT 아이콘 — 앱의 accent-grad 팔레트로 이루어진 원형 스월이 천천히 계속
-// 회전하는 배지. 아이콘을 얹지 않고 스월 자체가 곧 아이콘이다. 테마 토큰
-// 기반이라 라이트/다크 각각의 전체 톤과 자연스럽게 어우러진다.
-function AiOrb({ size = 20 }: { size?: number }) {
-  return <span className="c-ai-orb" style={{ width: size, height: size }} />
-}
-
 function Brand() {
   return (
     <span className="c-brand">
@@ -302,7 +295,6 @@ export default function App() {
             <kbd>⌘K</kbd>
           </button>
           <button className="c-ai-entry-btn" onClick={() => setAiOpen(true)}>
-            <AiOrb size={30} />
             <span className="c-ai-entry-text">
               <b>AI CHAT</b>
               <small>규정에 대해 무엇이든 물어보세요</small>
@@ -695,9 +687,7 @@ export default function App() {
 
       {selMenu && (
         <div className="c-sel-menu" style={{ left: selMenu.x, top: selMenu.y }}>
-          <button onClick={() => openAiWith("이 조항 설명하기", selMenu.text)}>
-            <AiOrb size={16} /> 설명하기
-          </button>
+          <button onClick={() => openAiWith("이 조항 설명하기", selMenu.text)}>설명하기</button>
           <button onClick={() => openAiWith("관련 규정 찾기", selMenu.text)}>
             <Icon name="search" size={13} /> 관련 규정
           </button>
@@ -708,7 +698,6 @@ export default function App() {
       )}
 
       <button className="c-ai-fab" onClick={() => setAiOpen(true)} aria-haspopup="dialog" aria-expanded={aiOpen}>
-        <AiOrb size={22} />
         <span>AI CHAT</span>
       </button>
 
@@ -796,9 +785,7 @@ export default function App() {
           {aiResizeHandle(-1)}
           {aiResizeHandle(1)}
           <div className="c-ai-sheet-head">
-            <span>
-              <AiOrb size={19} /> AI CHAT
-            </span>
+            <span>AI CHAT</span>
             <button className="c-icon-btn" aria-label="닫기" onClick={() => setAiOpen(false)}>
               <Icon name="close" size={16} />
             </button>
@@ -826,7 +813,6 @@ export default function App() {
                     <div className="c-ai-q">{m.q}</div>
                     {m.excerpt ? (
                       <div className="c-ai-a">
-                        <AiOrb size={18} />
                         <div>
                           <p>관련된 실제 규정 원문을 찾았습니다. (AI가 생성한 답변이 아니라 원문 발췌입니다)</p>
                           <button className="c-ai-excerpt" onClick={() => goReader(m.excerpt!.sectionId)}>
@@ -841,7 +827,6 @@ export default function App() {
                       </div>
                     ) : (
                       <div className="c-ai-a">
-                        <AiOrb size={18} />
                         <p>관련된 실제 규정 원문을 찾지 못했습니다. 이 시안은 1장(공통사항)의 실제 원문만 검색 대상으로 연결되어 있습니다.</p>
                       </div>
                     )}

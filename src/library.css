@@ -518,29 +518,7 @@
   color: var(--ink); font-size: 12.5px; padding: 11px 20px; border-radius: 999px; box-shadow: var(--shadow-lg);
 }
 
-/* ============================================================
-   AI 오브 배지 — 앱의 accent-grad 팔레트(블루·퍼플·시안)로 이루어진
-   원형 스월(swirl)이 원 안에서 천천히 계속 회전하는 배지. 유리구슬
-   식 3D 하이라이트는 쓰지 않고, 얇은 글로우 링 하나로만 정의해
-   전체 디자인 톤과 자연스럽게 어우러지게 한다.
-   ============================================================ */
-.c-ai-orb {
-  position: relative;
-  display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
-  border-radius: 999px; overflow: hidden; background: var(--accent-blue); color: #fff;
-  box-shadow: 0 0 0 1.5px var(--accent-blue), 0 0 10px 2px var(--glow-1);
-}
-.c-ai-orb::before {
-  content: ""; position: absolute; inset: -8%; border-radius: inherit;
-  background: conic-gradient(from 0deg, var(--accent-blue), var(--accent-purple), var(--accent-cyan), var(--accent-blue));
-  animation: c-ai-orb-spin 11s linear infinite;
-}
-@keyframes c-ai-orb-spin {
-  to { transform: rotate(360deg); }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .c-ai-orb::before { animation: none; }
   .libapp * { transition: none !important; scroll-behavior: auto !important; }
 }
 
