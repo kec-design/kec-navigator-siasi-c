@@ -881,7 +881,7 @@ export default function App() {
                 <Icon name="chevronDown" size={13} />
               </span>
             </div>
-            <button className="c-icon-btn" aria-label={dark ? "네이비 톤으로 전환" : "옵시디언 톤으로 전환"} title={dark ? "네이비 톤으로 전환" : "옵시디언 톤으로 전환"} onClick={() => setDark((d) => !d)}>
+            <button className="c-icon-btn" aria-label={dark ? "라이트 모드로 전환" : "다크 모드로 전환"} title={dark ? "라이트 모드로 전환" : "다크 모드로 전환"} onClick={() => setDark((d) => !d)}>
               <Icon name={dark ? "sun" : "moon"} size={17} />
             </button>
           </div>
