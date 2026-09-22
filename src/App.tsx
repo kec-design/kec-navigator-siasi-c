@@ -81,6 +81,7 @@ function Icon({ name, size = 20 }: { name: string; size?: number }) {
     bookmarkFilled: "M6 4h12a1 1 0 0 1 1 1v15l-7-4-7 4V5a1 1 0 0 1 1-1Z",
     share: "M8.5 12.5 15 8m0 0v4m0-4h-4M6 12v7a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-7M6 12l3.5-4.5",
     sparkle: "M12 3v3m0 12v3M3 12h3m12 0h3M6 6l2 2m8 8 2 2M6 18l2-2m8-8 2-2",
+    chat: "M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5Z",
     note: "M5 4h11l3 3v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1Zm10 0v4h4",
     link: "M9 15l6-6m-5-1 1.2-1.2a3.5 3.5 0 0 1 5 5L15 13m-6 2-1.2 1.2a3.5 3.5 0 1 1-5-5L4 10",
     minus: "M5 12h14",
@@ -288,7 +289,7 @@ export default function App() {
             <kbd>⌘K</kbd>
           </button>
           <button className="c-ai-entry-btn" onClick={() => setAiOpen(true)}>
-            <Icon name="sparkle" size={18} />
+            <Icon name="chat" size={18} />
             <span className="c-ai-entry-text">
               <b>AI CHAT</b>
               <small>규정에 대해 무엇이든 물어보세요</small>
@@ -682,7 +683,7 @@ export default function App() {
       {selMenu && (
         <div className="c-sel-menu" style={{ left: selMenu.x, top: selMenu.y }}>
           <button onClick={() => openAiWith("이 조항 설명하기", selMenu.text)}>
-            <Icon name="sparkle" size={13} /> 설명하기
+            <Icon name="chat" size={13} /> 설명하기
           </button>
           <button onClick={() => openAiWith("관련 규정 찾기", selMenu.text)}>
             <Icon name="search" size={13} /> 관련 규정
@@ -694,7 +695,7 @@ export default function App() {
       )}
 
       <button className="c-ai-fab" onClick={() => setAiOpen(true)} aria-haspopup="dialog" aria-expanded={aiOpen}>
-        <Icon name="sparkle" size={18} />
+        <Icon name="chat" size={18} />
         <span>AI CHAT</span>
       </button>
 
@@ -783,7 +784,7 @@ export default function App() {
           {aiResizeHandle(1)}
           <div className="c-ai-sheet-head">
             <span>
-              <Icon name="sparkle" size={15} /> AI CHAT
+              <Icon name="chat" size={15} /> AI CHAT
             </span>
             <button className="c-icon-btn" aria-label="닫기" onClick={() => setAiOpen(false)}>
               <Icon name="close" size={16} />
@@ -812,7 +813,7 @@ export default function App() {
                     <div className="c-ai-q">{m.q}</div>
                     {m.excerpt ? (
                       <div className="c-ai-a">
-                        <Icon name="sparkle" size={14} />
+                        <Icon name="chat" size={14} />
                         <div>
                           <p>관련된 실제 규정 원문을 찾았습니다. (AI가 생성한 답변이 아니라 원문 발췌입니다)</p>
                           <button className="c-ai-excerpt" onClick={() => goReader(m.excerpt!.sectionId)}>
@@ -827,7 +828,7 @@ export default function App() {
                       </div>
                     ) : (
                       <div className="c-ai-a">
-                        <Icon name="sparkle" size={14} />
+                        <Icon name="chat" size={14} />
                         <p>관련된 실제 규정 원문을 찾지 못했습니다. 이 시안은 1장(공통사항)의 실제 원문만 검색 대상으로 연결되어 있습니다.</p>
                       </div>
                     )}
