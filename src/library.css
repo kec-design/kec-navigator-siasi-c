@@ -519,34 +519,30 @@
 }
 
 /* ============================================================
-   AI 오브 배지 — 입체적인 유리구슬(3D) 느낌 대신, 앱의 accent-grad
-   팔레트를 그대로 쓰는 평평한 오로라빛 그라데이션이 아주 천천히
-   흐르는 배지. 튀지 않도록 글로우를 한 겹으로 줄이고, 테마 토큰을
-   써서 라이트/다크 각각의 전체 톤과 자연스럽게 어우러지게 한다.
+   AI 오브 배지 — 앱의 accent-grad 팔레트(블루·퍼플·시안)로 이루어진
+   원형 스월(swirl)이 원 안에서 천천히 계속 회전하는 배지. 유리구슬
+   식 3D 하이라이트는 쓰지 않고, 얇은 글로우 링 하나로만 정의해
+   전체 디자인 톤과 자연스럽게 어우러지게 한다.
    ============================================================ */
 .c-ai-orb {
   position: relative;
   display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
-  border-radius: 999px; overflow: hidden; color: #fff;
-  background:
-    radial-gradient(circle at 26% 26%, var(--accent-cyan) 0%, transparent 55%),
-    radial-gradient(circle at 76% 34%, var(--accent-purple) 0%, transparent 58%),
-    radial-gradient(circle at 46% 80%, var(--accent-blue) 0%, transparent 62%),
-    var(--accent-blue);
-  background-size: 220% 220%;
-  background-position: 30% 30%;
-  box-shadow: 0 0 0 1px var(--line-strong), 0 0 8px 1px var(--glow-1);
-  animation: c-ai-orb-drift 12s ease-in-out infinite;
+  border-radius: 999px; overflow: hidden; background: var(--accent-blue); color: #fff;
+  box-shadow: 0 0 0 1.5px var(--accent-blue), 0 0 10px 2px var(--glow-1);
+}
+.c-ai-orb::before {
+  content: ""; position: absolute; inset: -8%; border-radius: inherit;
+  background: conic-gradient(from 0deg, var(--accent-blue), var(--accent-purple), var(--accent-cyan), var(--accent-blue));
+  animation: c-ai-orb-spin 11s linear infinite;
 }
 .c-ai-orb svg { position: relative; z-index: 1; color: #fff; }
 
-@keyframes c-ai-orb-drift {
-  0%, 100% { background-position: 24% 28%; }
-  50% { background-position: 54% 56%; }
+@keyframes c-ai-orb-spin {
+  to { transform: rotate(360deg); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .c-ai-orb { animation: none; }
+  .c-ai-orb::before { animation: none; }
   .libapp * { transition: none !important; scroll-behavior: auto !important; }
 }
 

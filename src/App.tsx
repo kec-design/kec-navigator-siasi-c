@@ -106,9 +106,9 @@ function Icon({ name, size = 20, filled = false }: { name: string; size?: number
   )
 }
 
-// AI CHAT 아이콘 — 입체적인 3D 유리구슬 대신, 앱의 accent-grad 팔레트를 그대로 쓰는
-// 평평한 그라데이션이 아주 천천히 흐르는 배지 + 솔리드 스파클. 테마 토큰 기반이라
-// 라이트/다크 각각의 전체 톤과 자연스럽게 어우러진다.
+// AI CHAT 아이콘 — 앱의 accent-grad 팔레트로 이루어진 원형 스월이 천천히 계속
+// 회전하는 배지 + 솔리드 스파클. 테마 토큰 기반이라 라이트/다크 각각의 전체
+// 톤과 자연스럽게 어우러진다.
 function AiOrb({ size = 20 }: { size?: number }) {
   return (
     <span className="c-ai-orb" style={{ width: size, height: size }}>
