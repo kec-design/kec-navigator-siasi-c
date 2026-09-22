@@ -106,8 +106,9 @@ function Icon({ name, size = 20, filled = false }: { name: string; size?: number
   )
 }
 
-// AI CHAT 아이콘 — 글로우가 도는 그라데이션 원형 배지에 솔리드 스파클을 얹은 형태.
-// 라이트/다크 모드 모두 동일한 자체 발광 색상을 쓰므로 배경 테마와 무관하게 항상 같은 느낌을 준다.
+// AI CHAT 아이콘 — 입체적인 3D 유리구슬 대신, 앱의 accent-grad 팔레트를 그대로 쓰는
+// 평평한 그라데이션이 아주 천천히 흐르는 배지 + 솔리드 스파클. 테마 토큰 기반이라
+// 라이트/다크 각각의 전체 톤과 자연스럽게 어우러진다.
 function AiOrb({ size = 20 }: { size?: number }) {
   return (
     <span className="c-ai-orb" style={{ width: size, height: size }}>
