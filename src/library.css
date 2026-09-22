@@ -535,8 +535,6 @@
   background: conic-gradient(from 0deg, var(--accent-blue), var(--accent-purple), var(--accent-cyan), var(--accent-blue));
   animation: c-ai-orb-spin 11s linear infinite;
 }
-.c-ai-orb svg { position: relative; z-index: 1; color: #fff; }
-
 @keyframes c-ai-orb-spin {
   to { transform: rotate(360deg); }
 }

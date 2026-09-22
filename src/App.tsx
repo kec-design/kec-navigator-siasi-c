@@ -107,14 +107,10 @@ function Icon({ name, size = 20, filled = false }: { name: string; size?: number
 }
 
 // AI CHAT 아이콘 — 앱의 accent-grad 팔레트로 이루어진 원형 스월이 천천히 계속
-// 회전하는 배지 + 솔리드 스파클. 테마 토큰 기반이라 라이트/다크 각각의 전체
-// 톤과 자연스럽게 어우러진다.
+// 회전하는 배지. 아이콘을 얹지 않고 스월 자체가 곧 아이콘이다. 테마 토큰
+// 기반이라 라이트/다크 각각의 전체 톤과 자연스럽게 어우러진다.
 function AiOrb({ size = 20 }: { size?: number }) {
-  return (
-    <span className="c-ai-orb" style={{ width: size, height: size }}>
-      <Icon name="sparkleSolid" filled size={Math.round(size * 0.56)} />
-    </span>
-  )
+  return <span className="c-ai-orb" style={{ width: size, height: size }} />
 }
 
 function Brand() {
